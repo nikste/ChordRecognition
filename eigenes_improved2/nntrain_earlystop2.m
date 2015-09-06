@@ -31,7 +31,7 @@ fhandle = figure();
 
 batchsize = opts.batchsize;
 numepochs = opts.numepochs;
-
+opts.numepochs = 50;
 
 filelist = loadFilenames(id);
 
@@ -144,6 +144,7 @@ for p = 1:partitions
             breakflag = -1;
             break;
         end
+        save(strcat('C:\stuff\masterthesis\nn_', num2str(i_inc)),'nn');
     end
     if(breakflag == -1)
         break;
