@@ -44,35 +44,38 @@ min_loss = 100000;
 min_net = nn;
 counter = 0;
 i_inc = 0;
-for i = 1 : numepochs
-    
-    
-    for p = 1:partitions
-    
-        filelist_local = filelist(p : partitions : end); 
-        [train_x,train_y] = loadFiles(filelist_local);
-        
-        assert(size(train_x,1) == size(train_y,1),'train_x and train_y do not have the same size!!');
-        
-        %%TODO: preprocess!!
-        train_y = convertTo1K(train_y);
-        
-        last_point = size(train_x,1) - mod(size(train_x,1),batchsize);
-        val_x = train_x(last_point : end,:);
-        val_y = train_y(last_point : end,:);
-        train_x = train_x(1:last_point,:);
-        train_y = train_y(1:last_point,:);
-        
-        
-        
-        m = size(train_x, 1);
-        numbatches = m / batchsize;
 
-        assert(rem(numbatches, 1) == 0, 'numbatches must be a integer');
+breakflag = 0;
+for p = 1:partitions
+    tic 
+    filelist_local = filelist(p : partitions : end); 
+    [train_x,train_y] = loadFiles(filelist_local);
 
-        L = zeros(numepochs*numbatches,1);
-        n = 1;
-    
+    assert(size(train_x,1) == size(train_y,1),'train_x and train_y do not have the same size!!');
+
+    %%TODO: preprocess!!
+    train_y = convertTo1K(train_y);
+
+    last_point = size(train_x,1) - mod(size(train_x,1),batchsize);
+    val_x = train_x(last_point : end,:);
+    val_y = train_y(last_point : end,:);
+    train_x = train_x(1:last_point,:);
+    train_y = train_y(1:last_point,:);
+
+
+
+    m = size(train_x, 1);
+    numbatches = m / batchsize;
+
+    assert(rem(numbatches, 1) == 0, 'numbatches must be a integer');
+
+    L = zeros(numepochs*numbatches,1);
+    n = 1;
+    t_load = toc;
+    disp(['loaded training data ' num2str(p) '/' num2str(partitions) ' took ' num2str(t_load) ' seconds']);
+        
+    for i = 1 : numepochs
+
         tic;
 
         kk = randperm(m);
@@ -135,13 +138,19 @@ for i = 1 : numepochs
         end
 
         %stop if not increasing performance
-        if(counter >= 40 || i > 500)
+        if(counter >= 100 || i > 500)
             disp('breaking not increasing!!');
             nn = min_net;
+            breakflag = -1;
             break;
         end
     end
+    if(breakflag == -1)
+        break;
+    end
 end
+
+save('C:\stuff\masterthesis\nn','nn');
 end
 
 

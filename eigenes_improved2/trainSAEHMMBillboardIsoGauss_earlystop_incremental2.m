@@ -274,8 +274,8 @@ if(layer1 > 0 && layer2 > 0 && layer3 == 0)
     opts.noisevariance = vari;
     %sae = saetrain_isoGauss(sae, train_x, opts);
     
-    sae = saetrain_isoGauss2(sae,opts,id)
-    save('C:\stuff\masterthesis','sae');
+    %%sae = saetrain_isoGauss2(sae,opts,id)
+    %%save('C:\stuff\masterthesis\sae','sae');
     % back prop
     nn = nnsetup([num_inputs layer1 layer2 25]);
     
@@ -295,6 +295,7 @@ if(layer1 > 0 && layer2 > 0 && layer3 == 0)
     opts.batchsize = num_batch;%6203;%2189; %308;%100;
     opts.plot = 1;
     nn = nntrain_earlystop2(nn, opts,id);
+    save('C:\stuff\masterthesis\nn','nn');
     
 end
 

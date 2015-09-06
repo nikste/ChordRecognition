@@ -62,7 +62,7 @@ function [nn] = callPerformTestBillboard_earlystop_incremental2(multi_res,pcp_pr
     else
         %[nn,inits,transitions]= trainSAEHMMBillboard_earlystop(ffts_train,gts_train,gts_full,layer1,layer2,layer3,layer4,layer5,layer6, multi_res, pcp_pretrain,zeroMaskFrac,sparsity,dropout,sparsityPenalty,L2weightPenalty);
     end
-    save('C:\stuff\masterthesis','nn','inits','transitions')
+    save('C:\stuff\masterthesis\traindata','nn','inits','transitions')
     %save('/home/nikste/Desktop','nn','inits','transitions')
     ffts_train = [];
     gts_full = [];
