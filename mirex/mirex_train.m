@@ -13,6 +13,10 @@ filelist = importdata(trainlistfile)
 for i=1:size(filelist,1)
     disp(filelist{i});
     createFeatures2(filelist{i},scratchdir);
+    
+    %% check if length of files are good
+    
+    
 %     try
 %         [pathstr,name,ext] = fileparts(filelist{i}); 
 %         base = 'E:\stuff\repos\datasets\billboard\McGill-Billboard';
@@ -29,6 +33,18 @@ for i=1:size(filelist,1)
 %     end
         
 end
+
+%% train 
+
+%% start training
+
+
+
+%% save model
+
+
+
+
 % downsample and compute features (fft 1500 bins)
 
 %%filelist(~cellfun('isempty',filelist))  ;
