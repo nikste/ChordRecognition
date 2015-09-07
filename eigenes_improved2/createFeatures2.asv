@@ -44,8 +44,8 @@ assert(1 == all(all(ffts >= 0)));
 
 %% load ground truth and compare length:
 [pathstr,name,ext] = fileparts(input_file); 
-gt_name = srcat(pathstr,
-
+gt_name = strcat(pathstr,'\',name,ext,'.txt');
+createGT2(gt_name,strcat(output_folder);
 
 
 

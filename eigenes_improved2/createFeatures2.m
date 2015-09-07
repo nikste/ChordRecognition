@@ -42,10 +42,17 @@ assert(1 == all(all(ffts >= 0)))
 disp(strcat('size ffts:',num2str(size(ffts))));
 assert(1 == all(all(ffts >= 0)));
 
+
 %% load ground truth and compare length:
 [pathstr,name,ext] = fileparts(input_file); 
 gt_name = strcat(pathstr,'\',name,ext,'.txt');
-createGT2(gt_name,output_folder);
+
+gt_folder= strcat(output_folder,'\gt');
+if(~isequal(exist(fft_folder, 'dir'),7))
+     disp('fft folder does not exist, creating..')    
+     mkdir(fft_folder);
+end
+createGT2(gt_name,gt_folder);
 
 
 

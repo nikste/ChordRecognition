@@ -18,9 +18,10 @@ samplingrate = 11025;
 labfilename = input_file;%strcat(labfolder,'/',name,'/majmin7inv.lab');
 disp(labfilename);
 % compute, remember the framerate is now 11025/s
-[pathstr,name,ext] = fileparts(input_file);
-sounddata = wavread(strcat(pathstr,'\',name));%wavfiles{fileindex});
-
+[pathstr,name,ext] = fileparts(input_file)
+n  = strcat(pathstr,'\',name)
+sounddata = wavread(n);%wavfiles{fileindex});
+sounddata = resample(sounddata,1,4);
 %% get ground truth data in frames
 len  = length(sounddata);
 
@@ -30,7 +31,7 @@ chordframes = createGT(labfilename,len,stepsize,samplingrate);
 disp(strcat('writing to file ' , name));
 
 % ground truth
-dlmwrite(strcat(output_folder,'/',name,'.dataC'),chordframes,' ');
+dlmwrite(strcat(output_folder,'\',name,'.dataC'),chordframes,' ');
 % end
 
 end
