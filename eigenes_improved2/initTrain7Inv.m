@@ -1,4 +1,4 @@
-function [nn] = initTrain7Inv(trainfiles,gtfiles)
+function [nn] = initTrain7Inv(trainfiles,gtfiles,scratchdir)
     zeroMaskFrac = 0.7;
     dropout = 0.5;
     sparsity = 0.05;
@@ -37,9 +37,8 @@ function [nn] = initTrain7Inv(trainfiles,gtfiles)
     opts.numepochs = num_train_unsup;
     opts.batchsize = num_batch;%74436;%2189;%100
     opts.noisevariance = vari;
-    %sae = saetrain_isoGauss(sae, train_x, opts);
     
-    %%sae = saetrain_isoGauss27Inv(sae,opts, trainfiles)
+     sae = saetrain_isoGauss27Inv(sae,opts, trainfiles)
     %%save('C:\stuff\masterthesis\sae','sae');
     % back prop
     nn = nnsetup([num_inputs layer1 layer2 217]);
@@ -59,6 +58,6 @@ function [nn] = initTrain7Inv(trainfiles,gtfiles)
     opts.numepochs =  num_train_chord;
     opts.batchsize = num_batch;%6203;%2189; %308;%100;
     opts.plot = 1;
-    nn = nntrain_earlystop27inv(nn, opts,trainfiles,gtfiles);
-    save('C:\stuff\masterthesis\nn','nn');
+    nn = nntrain_earlystop27inv(nn, opts,trainfiles,gtfiles,scratchdir);
+    save(strcat(scratchdir,'\nn'),'nn');
 end

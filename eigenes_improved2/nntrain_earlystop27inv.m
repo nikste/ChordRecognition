@@ -1,4 +1,4 @@
-function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles)%(nn, train_x, train_y, opts, val_x, val_y)
+function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles,scratchdir)%(nn, train_x, train_y, opts, val_x, val_y)
 %NNTRAIN trains a neural net
 % [nn, L] = nnff(nn, x, y, opts) trains the neural network nn with input x and
 % output y for opts.numepochs epochs, with minibatches of size
@@ -58,7 +58,7 @@ for p = 1:partitions
 
     %%TODO: preprocess!!
     
-    train_y = convertTo1K7Inv(train_y_);
+    train_y = convertTo1K7Inv(train_y);
 
     last_point = size(train_x,1) - mod(size(train_x,1),batchsize);
     val_x = train_x(last_point : end,:);
@@ -148,14 +148,14 @@ for p = 1:partitions
             breakflag = -1;
             break;
         end
-        save(strcat('E:\stuff\repos\datasets\nn_', num2str(i_inc)),'nn');
+        save(strcat(scratchdir,'\nn_', num2str(i_inc)),'nn');
     end
     if(breakflag == -1)
         break;
     end
 end
 
-save('E:\stuff\repos\datasets\nn','nn');
+save(strcat(scratchdir,'\nn'),'nn');
 end
 
 
@@ -194,29 +194,16 @@ train_x = [];
 %gtfoldername = 'E:\stuff\repos\datasets\billboard\scratchdir\gt';%'C:\stuff\masterthesis\gt';
 train_y = [];
 for ind = 1 : size(trainfilelist_local,1)
-    %filename = strcat(fftfoldername,'\',filelist_local{ind}(1:end-4),'.dataF');
-    filename = trainfilelist_local(ind);
-    %disp(['loading file:' filename ])
+    filename = trainfilelist_local{ind};
     train_x_ = load(filename,'-mat');
     train_x_ = train_x_.data;
     train_x = [train_x;train_x_];
     
-    %filename = strcat(gtfoldername,'\',filelist_local{ind}(1:end-4),'.dataC');
-    
-    %disp(['loading file:' filename ])
-    filename = gtfilelist_local(ind);
-    train_y_ = importdata(gtfilelist_local);
+    filename = gtfilelist_local{ind};
+    train_y_ = importdata(filename);
     train_y_ = train_y_(:,1);
     train_y = [train_y;train_y_];
     
-%     diff = size(train_x,1) - size(train_y,1);
-%     diff
-%     if(diff > 0)
-%         train_x = train_x(1:end-diff,:);
-%     elseif(diff < 0)
-%         train_x = [train_x;train_x(end-diff:end,:)];
-%     end
-%     disp(num2str(size(train_x,1) - size(train_y,1)))
 end
 
 end
