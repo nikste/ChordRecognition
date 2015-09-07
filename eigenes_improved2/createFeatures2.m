@@ -1,4 +1,4 @@
-function  createFeatures2( input_file, output_folder )
+function  [fft_file,gt_file] = createFeatures2( input_file, output_folder )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -48,17 +48,36 @@ assert(1 == all(all(ffts >= 0)));
 gt_name = strcat(pathstr,'\',name,ext,'.txt');
 
 gt_folder= strcat(output_folder,'\gt');
-if(~isequal(exist(fft_folder, 'dir'),7))
-     disp('fft folder does not exist, creating..')    
-     mkdir(fft_folder);
+if(~isequal(exist(gt_folder, 'dir'),7))
+     disp('gt folder does not exist, creating..')    
+     mkdir(gt_folder);
 end
-createGT2(gt_name,gt_folder);
+chordframes = createGT2(gt_name,gt_folder);
 
 
+diff = size(ffts,1) - size(chordframes,1);
+diff
+if(diff > 0)
+    ffts = ffts(1:end-diff,:);
+elseif(diff < 0)
+    ffts = [ffts;ffts(end-diff-1:end,:)];
+end
+assert(size(ffts,1) - size(chordframes,1) == 0);
+%% save all that shit
+[gt_pathstr,gt_name,gt_ext] = fileparts(input_file);
+gt_n  = strcat(pathstr,'\',gt_name)
 
-fname = strcat(fft_folder,'\',name,'.dataF')
+disp(strcat('writing to file ' , gt_name));
+
+% ground truth
+dlmwrite(strcat(gt_folder,'\',gt_name,'.dataC'),chordframes,' ');
+% end
+gt_file = strcat(gt_folder,'\',gt_name,'.dataC');
+
+fft_file = strcat(fft_folder,'\',name,'.dataF')
 data = ffts;
-save(fname, 'data')
+save(fft_file, 'data')
+
 end
 %% precompute cqt filter:
 % minFreq =  32,703; 

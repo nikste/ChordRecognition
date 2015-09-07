@@ -10,10 +10,13 @@ function [filelist] = mirex_train(trainlistfile,scratchdir)
 
 %% load training files, compute features, get ground truth, align both.
 filelist = importdata(trainlistfile)
-for i=1:size(filelist,1)
+trainfiles = []
+gtfiles = []
+parfor i=1:size(filelist,1)
     disp(filelist{i});
-    createFeatures2(filelist{i},scratchdir);
-    
+    [trainfile,gtfile] = createFeatures2(filelist{i},scratchdir);
+    trainfiles = [trainfiles;trainfile];
+    gtfiles = [gtfiles;gtfile];
     %% check if length of files are good
     
     
@@ -35,6 +38,8 @@ for i=1:size(filelist,1)
 end
 
 %% train 
+initTrain7Inv(trainfiles,gtfiles);
+
 
 %% start training
 

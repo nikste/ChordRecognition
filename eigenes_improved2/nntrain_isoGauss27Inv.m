@@ -1,4 +1,4 @@
-function [nn, L]  = nntrain_isoGauss2(sae, opts, layer, filelist)%nn, train_x, train_y, opts, val_x, val_y)
+function [nn, L]  = nntrain_isoGauss27Inv(sae, opts, layer, filelist)%nn, train_x, train_y, opts, val_x, val_y)
 %NNTRAIN trains a neural net
 % [nn, L] = nnff(nn, x, y, opts) trains the neural network nn with input x and
 % output y for opts.numepochs epochs, with minibatches of size
@@ -11,7 +11,6 @@ function [nn, L]  = nntrain_isoGauss2(sae, opts, layer, filelist)%nn, train_x, t
 
 
 %opts.numepochs = 30;
-
 
 
 loss.train.e               = [];
@@ -33,7 +32,7 @@ batchsize = opts.batchsize;
 numepochs = opts.numepochs;
 
 
-
+%% TOOD: pull this out
 partitions = 8;
 
 n = 1;
@@ -57,6 +56,7 @@ for p = 1 : partitions
 
     %loadfiles
     filelist_local = filelist(p : partitions : end); 
+    
     train_x = loadFiles(filelist_local);
     %preprocess -> is done in load function
     %cut of too many frames if there are.
@@ -169,13 +169,14 @@ end
 
 
 function [train_x,train_y] = loadFiles(filelist_local)
-fftfoldername = 'C:\stuff\masterthesis\data\fft';
+%fftfoldername = 'C:\stuff\masterthesis\data\fft';
 train_x = [];
-for ind = 1 : size(filelist_local,2)
-    filename = strcat(fftfoldername,'\',filelist_local{ind},'.dataF');
+for ind = 1 : size(filelist_local,1)
+    %filename = strcat(fftfoldername,'\',filelist_local{ind},'.dataF');
     %disp(['loading file:' filename ])
+    filename = filelist_local{ind};
     train_x_ = load(filename,'-mat');
-    train_x_ = train_x_.ffts_train;
+    train_x_ = train_x_.data;
     train_x = [train_x;train_x_];
 end
 end

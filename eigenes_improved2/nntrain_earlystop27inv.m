@@ -1,4 +1,4 @@
-function [nn, L]  = nntrain_earlystop27inv(nn, opts, id)%(nn, train_x, train_y, opts, val_x, val_y)
+function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles)%(nn, train_x, train_y, opts, val_x, val_y)
 %NNTRAIN trains a neural net
 % [nn, L] = nnff(nn, x, y, opts) trains the neural network nn with input x and
 % output y for opts.numepochs epochs, with minibatches of size
@@ -33,7 +33,7 @@ batchsize = opts.batchsize;
 numepochs = opts.numepochs;
 opts.numepochs = 50;
 
-filelist = loadFilenames(id);
+%filelist = loadFilenames(id);
 
 
 
@@ -48,8 +48,10 @@ i_inc = 0;
 breakflag = 0;
 for p = 1:partitions
     tic 
-    filelist_local = filelist(p : partitions : end); 
-    [train_x,train_y] = loadFiles(filelist_local);
+    %filelist_local = filelist(p : partitions : end); 
+    trainfilelist_local = trainfiles(p:partitions:end);
+    gtfilelist_local = gtfiles(p:partitions:end);
+    [train_x,train_y] = loadFiles(trainfilelist_local,gtfilelist_local);
 
 
     assert(size(train_x,1) == size(train_y,1),'train_x and train_y do not have the same size!!');
@@ -186,33 +188,35 @@ function filenames = loadFilenames(id)
 end
 
 
-function [train_x,train_y] = loadFiles(filelist_local)
-fftfoldername = 'E:\stuff\repos\datasets\billboard\scratchdir\fft';%'C:\stuff\masterthesis\data\fft';
+function [train_x,train_y] = loadFiles(trainfilelist_local,gtfilelist_local)
+%fftfoldername = 'E:\stuff\repos\datasets\billboard\scratchdir\fft';%'C:\stuff\masterthesis\data\fft';
 train_x = [];
-gtfoldername = 'E:\stuff\repos\datasets\billboard\scratchdir\gt';%'C:\stuff\masterthesis\gt';
+%gtfoldername = 'E:\stuff\repos\datasets\billboard\scratchdir\gt';%'C:\stuff\masterthesis\gt';
 train_y = [];
-for ind = 1 : size(filelist_local,2)
-    filename = strcat(fftfoldername,'\',filelist_local{ind}(1:end-4),'.dataF');
+for ind = 1 : size(trainfilelist_local,1)
+    %filename = strcat(fftfoldername,'\',filelist_local{ind}(1:end-4),'.dataF');
+    filename = trainfilelist_local(ind);
     %disp(['loading file:' filename ])
     train_x_ = load(filename,'-mat');
     train_x_ = train_x_.data;
     train_x = [train_x;train_x_];
     
-    filename = strcat(gtfoldername,'\',filelist_local{ind}(1:end-4),'.dataC');
+    %filename = strcat(gtfoldername,'\',filelist_local{ind}(1:end-4),'.dataC');
     
     %disp(['loading file:' filename ])
-    train_y_ = importdata(strcat(gtfoldername,'\',filelist_local{ind},'.dataC'));
+    filename = gtfilelist_local(ind);
+    train_y_ = importdata(gtfilelist_local);
     train_y_ = train_y_(:,1);
     train_y = [train_y;train_y_];
     
-    diff = size(train_x,1) - size(train_y,1);
-    diff
-    if(diff > 0)
-        train_x = train_x(1:end-diff,:);
-    elseif(diff < 0)
-        train_x = [train_x;train_x(end-diff:end,:)];
-    end
-    disp(num2str(size(train_x,1) - size(train_y,1)))
+%     diff = size(train_x,1) - size(train_y,1);
+%     diff
+%     if(diff > 0)
+%         train_x = train_x(1:end-diff,:);
+%     elseif(diff < 0)
+%         train_x = [train_x;train_x(end-diff:end,:)];
+%     end
+%     disp(num2str(size(train_x,1) - size(train_y,1)))
 end
 
 end

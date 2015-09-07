@@ -1,4 +1,4 @@
-function [] = createGT2(input_file,output_folder)
+function [chordframes] = createGT2(input_file,output_folder)
 % wavfolder = '/home/nsteen/billboard/wav';
 % labfolder = '/home/nsteen/billboard/McGill-Billboard';
 % 
@@ -27,12 +27,7 @@ len  = length(sounddata);
 
 chordframes = createGT(labfilename,len,stepsize,samplingrate);
 
-    %% save all that shit
-disp(strcat('writing to file ' , name));
 
-% ground truth
-dlmwrite(strcat(output_folder,'\',name,'.dataC'),chordframes,' ');
-% end
 
 end
 
