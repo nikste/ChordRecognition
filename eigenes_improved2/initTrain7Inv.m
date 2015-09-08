@@ -38,7 +38,7 @@ function [nn] = initTrain7Inv(trainfiles,gtfiles,scratchdir)
     opts.batchsize = num_batch;%74436;%2189;%100
     opts.noisevariance = vari;
     
-     sae = saetrain_isoGauss27Inv(sae,opts, trainfiles)
+    sae = saetrain_isoGauss27Inv(sae,opts, trainfiles)
     %%save('C:\stuff\masterthesis\sae','sae');
     % back prop
     nn = nnsetup([num_inputs layer1 layer2 217]);

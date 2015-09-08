@@ -43,10 +43,16 @@ for song = 1:size(testfiles)
     paths_chunks{song} = Num2Chord(path_chunk);
 end
 
+
+% check if output folder exists:
+if(~isequal(exist(resultdir, 'dir'),7))
+     disp('result folder does not exist, creating..')    
+     mkdir(resultdir);
+end
 %% save results
 for song = 1:size(testfiles)
     [path,name,ext] = fileparts(testfiles{song});
-    dlmwrite(strcat(resultdir,'\',name,ext,'.txt'),paths_chunks{song},'');
+    dlmwrite(strcat(resultdir,'\',name,'.wav','.txt'),paths_chunks{song},'');
 
 end
 

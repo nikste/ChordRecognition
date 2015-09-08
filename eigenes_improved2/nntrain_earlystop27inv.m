@@ -1,4 +1,4 @@
-function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles,scratchdir)%(nn, train_x, train_y, opts, val_x, val_y)
+function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles, scratchdir)%(nn, train_x, train_y, opts, val_x, val_y)
 %NNTRAIN trains a neural net
 % [nn, L] = nnff(nn, x, y, opts) trains the neural network nn with input x and
 % output y for opts.numepochs epochs, with minibatches of size
@@ -7,7 +7,7 @@ function [nn, L]  = nntrain_earlystop27inv(nn, opts, trainfiles, gtfiles,scratch
 % squared error for each training minibatch.
 
 nn.inputZeroMaskedFraction = 0.7;
-nn.dropoutFraction = 0.7;
+nn.dropoutFraction = 0.5;
 nn.sparsityTarget = 0.05;
 nn.nonSparsityPenalty = 0.1;
 nn.dropoutFraction = 0.5;
@@ -46,9 +46,14 @@ counter = 0;
 i_inc = 0;
 
 breakflag = 0;
+for g = 1:500
 for p = 1:partitions
     tic 
     %filelist_local = filelist(p : partitions : end); 
+    n = size(trainfiles,2);
+    ix = randperm(n);
+    trainfiles = trainfiles(ix);
+    gtfiles = gtfiles(ix);
     trainfilelist_local = trainfiles(p:partitions:end);
     gtfilelist_local = gtfiles(p:partitions:end);
     [train_x,train_y] = loadFiles(trainfilelist_local,gtfilelist_local);
@@ -142,7 +147,7 @@ for p = 1:partitions
         end
 
         %stop if not increasing performance
-        if(counter >= 100 || i > 500)
+        if(counter >= 300 || i > 500)
             disp('breaking not increasing!!');
             nn = min_net;
             breakflag = -1;
@@ -154,7 +159,7 @@ for p = 1:partitions
         break;
     end
 end
-
+end
 save(strcat(scratchdir,'\nn'),'nn');
 end
 
