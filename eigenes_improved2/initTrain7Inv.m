@@ -7,7 +7,7 @@ function [nn] = initTrain7Inv(trainfiles,gtfiles,scratchdir)
     L2weightPenalty = 0;
     num_inputs = 1500;
     layer1 = 800;
-    layer2 = 800;
+    layer2 = 400;
     num_train_unsup = 30;
     num_batch = 1000;
     

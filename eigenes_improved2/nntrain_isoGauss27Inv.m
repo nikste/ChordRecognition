@@ -33,7 +33,7 @@ numepochs = opts.numepochs;
 
 
 %% TOOD: pull this out
-partitions = 8;
+partitions = 4;
 
 n = 1;
 
@@ -171,7 +171,7 @@ end
 function [train_x,train_y] = loadFiles(filelist_local)
 %fftfoldername = 'C:\stuff\masterthesis\data\fft';
 train_x = [];
-for ind = 1 : size(filelist_local,1)
+for ind = 1 : 8:  size(filelist_local,2)
     %filename = strcat(fftfoldername,'\',filelist_local{ind},'.dataF');
     %disp(['loading file:' filename ])
     filename = filelist_local{ind};
